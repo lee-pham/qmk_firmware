@@ -114,6 +114,14 @@ const is31_led __flash g_is31_leds[DRIVER_LED_TOTAL] = {
 
 };
 
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (host_keyboard_led_state().caps_lock) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(45, 0, 255, 0);
+    } else {
+        RGB_MATRIX_INDICATOR_SET_COLOR(45, 0, 0, 0);
+    }
+}
+
 led_config_t g_led_config = {
 	{
 		{   0,     NO_LED,  1,      2,      3,      4,      5,      6,      7,      8,      9,     10,     11,      12,     14   },

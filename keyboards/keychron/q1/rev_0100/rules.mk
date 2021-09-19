@@ -22,3 +22,6 @@ AUDIO_ENABLE = no           # Audio output
 DIP_SWITCH_ENABLE = yes
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = IS31FL3733
+
+SRC += qmk_rc.c
+RAW_ENABLE = yes

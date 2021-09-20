@@ -46,9 +46,7 @@ enum qmk_rc_commands_quantum {
 
     SEND_STRING,
 
-    RGB_MATRIX_SET_ONE,
-    RGB_MATRIX_SET_TWO,
-    RGB_MATRIX_SET_ACCENT,
+    RGB_MATRIX_SET,
 #endif
 };
 
@@ -95,41 +93,23 @@ void qmk_rc_process_command_quantum(qmk_rc_command_t* command) {
             rgb_matrix_enable_noeeprom();
             break;
         case RGB_MATRIX_SETRGB_RANGE:
-            for (int i = command->data[3]; i < command->data[4]; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
+            for (int i = command->data[3]; i < command->data[4]; i++) {
+                rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
+            }
             break;
 
-        case RGB_MATRIX_SET_ONE:
-            rgb_matrix_set_color(20, command->data[0], command->data[1], command->data[2]);
-            rgb_matrix_set_color(21, command->data[3], command->data[4], command->data[5]);
-            rgb_matrix_set_color(22, command->data[6], command->data[7], command->data[8]);
-            rgb_matrix_set_color(23, command->data[9], command->data[10], command->data[11]);
-
-            rgb_matrix_set_color(34, command->data[12], command->data[13], command->data[14]);
-            rgb_matrix_set_color(35, command->data[15], command->data[16], command->data[17]);
-            rgb_matrix_set_color(36, command->data[18], command->data[19], command->data[20]);
-            rgb_matrix_set_color(37, command->data[21], command->data[22], command->data[23]);
+        case RGB_MATRIX_SET:;
+            int c = 1;
+            for (int i = (command->data[0]) * 24; i < (command->data[0]) * 24 + 24; i++) {
+                int bit = command->data[c];
+                int r = (bit >> 5) * 32;
+                int g = ((bit & 28) >> 2) * 32;
+                int b = (bit & 3) * 64;
+                rgb_matrix_set_color(i, r, g, b);
+                c++;
+            }
             break;
 
-        case RGB_MATRIX_SET_TWO:
-            rgb_matrix_set_color(49, command->data[0], command->data[1], command->data[2]);
-            rgb_matrix_set_color(50, command->data[3], command->data[4], command->data[5]);
-            rgb_matrix_set_color(51, command->data[6], command->data[7], command->data[8]);
-            rgb_matrix_set_color(52, command->data[9], command->data[10], command->data[11]);
-
-            rgb_matrix_set_color(63, command->data[12], command->data[13], command->data[14]);
-            rgb_matrix_set_color(64, command->data[15], command->data[16], command->data[17]);
-            rgb_matrix_set_color(65, command->data[18], command->data[19], command->data[20]);
-            rgb_matrix_set_color(66, command->data[21], command->data[22], command->data[23]);
-            break;
-
-        case RGB_MATRIX_SET_ACCENT:
-            for (int i = 0; i <= 19; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            for (int i = 24; i <= 33; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            for (int i = 38; i <= 48; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            for (int i = 53; i <= 62; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            for (int i = 67; i <= 71; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            for (int i = 72; i <= 81; i++) rgb_matrix_set_color(i, command->data[0], command->data[1], command->data[2]);
-            break;
 #    endif
 
         case LAYER_ON:
